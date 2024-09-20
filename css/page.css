@@ -1,0 +1,515 @@
+/* Project Name: POEM-HOPKY V1.0
+ Description: HTML GUI for SSH/SCP/rsync
+ Author: CodeMacs.com (Web Design Co.)
+ License: GNU General Public License v3.0
+
+ Copyright (C) 2024 CodeMacs.com/wd-co.com
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline-style: hidden;
+  outline-color: #b3b3b3;
+}
+
+@font-face {
+  font-family: "Barlow";
+  font-style: medium;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/site/fonts/barlow.400.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Barlow";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url(/site/fonts/barlow.700.woff2) format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+body {
+  font-family: "Barlow", Helvetica, Arial;
+  font-weight: 400;
+  font-size: 1rem;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.4;
+  color: #000;
+}
+
+@-moz-document url-prefix() {
+  body {
+    font-family: "Open Sans", "Helvertica Neue", sans-sherif, Helvetica, Arial;
+  }
+}
+h1 {
+  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 1.65vw, 1.45rem);
+}
+
+h2 {
+  font-size: 1.3rem;
+  font-size: clamp(1.3rem, 1.35vw, 1.25rem);
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-size: clamp(1.2rem, 1.25vw, 1.15rem);
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-size: clamp(1.1rem, 1.15vw, 1.05rem);
+}
+
+.head {
+  background-color: #b3b3b3;
+  width: 100%;
+  padding: 0.2rem 2.5rem 0.2rem 2.5rem;
+  border-bottom: #2c2b2b 1px solid;
+  margin-bottom: 0.2rem;
+}
+.head .htitle {
+  min-height: 1.5rem;
+  position: relative;
+}
+.head .htitle .sitesel {
+  border-color: #2c2b2b;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  padding: 0.15rem 0.5rem;
+}
+.head .htitle form {
+  display: inline-block;
+}
+.head .htitle .right {
+  float: right;
+}
+.head .htitle .right a {
+  color: #424242;
+  margin-left: 0.5rem;
+}
+.head .htitle .center {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  width: auto;
+  margin: 0 auto;
+  max-width: 40%;
+}
+.head .htitle .center a {
+  color: #2c2b2b;
+}
+.head .htitle .small {
+  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1vw, 0.85rem);
+}
+
+.content {
+  width: 100%;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  display: flex;
+  gap: 5px;
+}
+
+.content > * {
+  flex: 1;
+}
+
+a {
+  text-decoration: none;
+  color: #00267e;
+}
+
+.filebox {
+  border-right: 1px solid #828282;
+  border-left: 1px solid #828282;
+  border-bottom: 1px solid #828282;
+}
+.filebox .headbox {
+  background-color: #d5d5d5;
+  border-bottom: 1px solid #828282;
+  border-top: 1px solid #828282;
+  padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+  position: sticky;
+  display: flex;
+  gap: 0.5rem;
+  top: 0;
+  z-index: 99;
+}
+.filebox .headbox a {
+  color: #2c2b2b;
+}
+.filebox .headbox .topdir {
+  flex: 1;
+  text-align: right;
+}
+.filebox .locahead, .filebox .doitem {
+  margin-right: 0.8rem;
+}
+.filebox .files {
+  position: relative;
+  width: 100%;
+  min-height: 50%;
+  height: 95vh;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+.filebox .files fl {
+  margin-left: 0.5rem;
+  display: block;
+}
+.filebox .doitem:last-child {
+  margin-right: -0.5rem;
+}
+
+ul, ol {
+  margin-left: 1.5rem;
+}
+ul li, ol li {
+  margin-bottom: 0.6rem;
+}
+ul li:last-child, ol li:last-child {
+  margin-bottom: 0;
+}
+
+na {
+  color: #b3b3b3;
+}
+
+.b, b, strong {
+  font-weight: 700;
+}
+
+.red {
+  color: #d50505;
+}
+
+.bred {
+  background-color: #d50505 !important;
+  color: #ffffff !important;
+}
+
+.bgreen {
+  background-color: #007e2a !important;
+  color: #ffffff !important;
+}
+
+.green {
+  color: #007e2a;
+}
+
+.greyb {
+  background-color: #d5d5d5;
+  color: #2c2b2b;
+}
+
+.na {
+  color: #828282;
+}
+
+.frmr {
+  overflow: hidden;
+  position: relative;
+  max-width: 100%;
+}
+.frmr .ckl {
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #b3b3b3;
+  padding: 1px 1em;
+  font-size: 1.2rem;
+  margin: -1.6rem 0 0 0;
+}
+.frmr .ckl span {
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  float: right;
+  margin-left: 0.5rem;
+}
+.frmr .ckl span c {
+  display: inline-block;
+  min-width: 1.6rem;
+  margin: 0 0 0 0.5rem;
+  text-align: right;
+}
+.frmr .ckl span f {
+  display: inline-block;
+  padding: 0 0.5rem;
+  margin: 0 0 0 0.5rem;
+  min-width: 8.5rem;
+  text-align: right;
+}
+.frmr .ckl:hover {
+  background: #ddd;
+}
+.frmr .ckb {
+  width: 0;
+  height: 0;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding: 0;
+  transition: 0.5s ease;
+  outline: 0;
+}
+.frmr .ckb:active + label {
+  background-color: #ddd;
+}
+.frmr .btmhd {
+  text-align: right;
+  padding: 0 0.6rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: 1.5rem;
+  background-color: #d5d5d5;
+}
+.frmr .tpbld {
+  font-weight: 700;
+}
+.frmr .itdr {
+  font-weight: 500;
+  background-color: #faf8ce;
+}
+
+.frmr:last-child .ckl {
+  border: none;
+}
+
+:checked + .ckl, :checked + .ckl:hover {
+  background: #990719;
+  color: #ffffff;
+}
+
+.nobox {
+  display: none;
+}
+
+.visbox {
+  display: block;
+}
+
+.closebutton {
+  border: 1px solid #019d35;
+  background-color: #007e2a;
+  border-radius: 5px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  color: #ffffff;
+  text-transform: uppercase;
+  display: inline-block;
+  vertical-align: top;
+  box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.closebutton:hover {
+  box-shadow: none;
+}
+
+.boxposition {
+  min-width: 30%;
+  border: 1px solid #2c2b2b;
+  border-radius: 0.3rem;
+  background: #ffffff;
+  position: fixed;
+  left: 2rem;
+  top: 1rem;
+  padding: 1rem;
+  z-index: 99;
+  overflow: auto;
+}
+
+.boxcontent {
+  max-height: 85vh;
+  max-width: 80svw;
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  overflow: auto;
+}
+.boxcontent p {
+  margin: 1rem 0;
+}
+
+.ckbhd {
+  width: 0;
+  height: 0;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding: 0;
+  transition: 0.5s ease;
+  outline: 0;
+}
+
+.letter {
+  font-size: clamp(0.8rem, 1vw, 0.85rem);
+  margin-top: -2px;
+}
+
+.cnrlbx {
+  display: block;
+  padding-top: 1rem;
+  border-top: 1px solid #2c2b2b;
+}
+
+.inptxt, .inpsmtx {
+  min-width: 10rem;
+  border: 1px solid #03689a;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  padding: 0.2rem 0.5rem;
+  background-color: #ffffff;
+  display: inline-block;
+}
+
+.inpsmtx {
+  width: 5rem;
+  min-width: 5rem;
+}
+
+.rawline {
+  display: table-row;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.smchkb input[type=checkbox] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid #2c2b2b;
+  background-clip: content-box;
+  padding: 3px;
+  margin-left: 0.5rem;
+}
+.smchkb input[type=checkbox]:checked {
+  background-color: #0998c8;
+}
+
+.flbtn {
+  border: 1px solid #0998c8;
+  border-radius: 4px;
+  background-color: #03689a;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  color: #ffffff;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.rawline span {
+  margin-left: 0.5rem;
+}
+
+.rawline span:first-child {
+  margin-left: 0;
+}
+
+.flbtn:hover {
+  box-shadow: none;
+}
+
+.frmlbl {
+  font-size: 1rem;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  margin-right: 0.8rem;
+}
+
+#barcontent {
+  background-color: #ffffff;
+  display: none;
+  width: 95%;
+  margin-left: 2%;
+  position: fixed;
+  bottom: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #2c2b2b;
+  border-radius: 6px;
+  box-shadow: 5px 5px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+.barprogress {
+  width: 0.1%;
+  height: 0.4rem;
+  background-color: #007e2a;
+}
+
+.barnotes {
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  margin-bottom: 0.4rem;
+}
+
+.formrow {
+  display: block;
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  margin-bottom: 1rem;
+}
+
+.setform {
+  display: inline-block;
+  margin-right: 0.9rem;
+}
+
+.sett input[type=text] {
+  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.1vw, 0.95rem);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #2c2b2b;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+.setupbutton {
+  border: 1px solid #b3b3b3;
+  background-color: #007e2a;
+  border-radius: 5px;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1vw, 0.85rem);
+  color: #ffffff;
+  text-transform: uppercase;
+  display: inline-block;
+  vertical-align: top;
+  box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.2);
+  margin: -0.15rem 0 0 0.4rem;
+}
+
+.setupbutton:hover {
+  box-shadow: none;
+}
+
+@media (max-width: 800px) {
+  .head .htitle {
+    min-height: 1.5rem;
+    position: relative;
+  }
+  .head .htitle .center {
+    display: none;
+  }
+}/*# sourceMappingURL=page.css.map */
