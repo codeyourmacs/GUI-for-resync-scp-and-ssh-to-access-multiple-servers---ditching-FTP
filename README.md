@@ -8,7 +8,7 @@
 
 <h2>🛠️ Installation Steps:</h2>
 
-<p>1. Copy files to Apache/NGINX web folder.</p>
+<p>1. Copy files to Apache/NGINX "/site/" web folder.</p>
 
 <p>2. Make sure files are executable by a webserver.</p>
 
