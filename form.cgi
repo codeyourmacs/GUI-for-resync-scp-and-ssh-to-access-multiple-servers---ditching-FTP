@@ -665,7 +665,7 @@ sub dorefresh {
 		if($memd->get("initdir$ENV{'REMOTE_ADDR'}")) {$locdir=$memd->get("initdir$ENV{'REMOTE_ADDR'}");}
 	}
 	unless($locdir) {
-			unless(%settings) {
+		unless(%settings) {
 			my $pr=$ENV{SCRIPT_FILENAME};	my @spf=split(/\//,$pr);	pop(@spf);	$pr = join '/',@spf;
 			if(-f "$pr/datasettings.cgi") {
 				eval {require "$pr/datasettings.cgi"};
