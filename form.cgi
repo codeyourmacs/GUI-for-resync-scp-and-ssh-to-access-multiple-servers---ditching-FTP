@@ -665,9 +665,18 @@ sub dorefresh {
 		if($memd->get("initdir$ENV{'REMOTE_ADDR'}")) {$locdir=$memd->get("initdir$ENV{'REMOTE_ADDR'}");}
 	}
 	unless($locdir) {
-		$locdir='/home'; ## FALL TO UNIX DEFAULT HOME DIRECTORY CHANGE ACCORDINGLY
-	}
-
+			unless(%settings) {
+			my $pr=$ENV{SCRIPT_FILENAME};	my @spf=split(/\//,$pr);	pop(@spf);	$pr = join '/',@spf;
+			if(-f "$pr/datasettings.cgi") {
+				eval {require "$pr/datasettings.cgi"};
+			}
+		}
+		if($settings{initdir}) {
+			$locdir=$settings{initdir};
+		} else {
+			$locdir='/home'; ## FALL TO UNIX DEFAULT HOME DIRECTORY CHANGE ACCORDINGLY
+		}
+	} ## END NO LOCAL DIR
 	$locdirread=" $locdir";
 	print "Content-type: text/txt\n\n";
 	writedir('anything',$locdir);
